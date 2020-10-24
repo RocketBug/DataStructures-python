@@ -80,6 +80,8 @@ class HashTableLinearProbing:
             x += 1
             entry = self.__get(key=key, x=x)
 
+        return entry
+
 
     def printHashTable(self):
         for i,j in enumerate(self.hashTable):
