@@ -35,36 +35,51 @@ class HashTableLinearProbing:
     def __lookup(self, index: int) -> Entry:
         return self.hashTable[index]
 
-    def bucketIndex(self, key: int) -> int:
+    def __keyIndex(self, key: int, x: int) -> int:
+        index = (hash(key) + self.__probing(x=x)) % self.DEFAULT_CAPACITY
+        return index
+
+    def __freeIndex(self, key: int) -> int:
         for i in range(self.DEFAULT_CAPACITY) :
             index = (hash(key) + self.__probing(x=i)) % self.DEFAULT_CAPACITY
             if self.__lookup(index=index) == None:
                 return index
 
     def __increaseSize(self):
-        self.hashTable = []
-        for i in range(self.DEFAULT_CAPACITY):
-            self.hashTable.append(None)
-
+        self.hashTable = [None for i in range(self.DEFAULT_CAPACITY)]
+        
     def __resize(self):
         self.DEFAULT_CAPACITY = self.DEFAULT_CAPACITY * 2
         hashTableCopy = list.copy(self.hashTable)
         self.__increaseSize()
         for entry in hashTableCopy:
             if entry:
-                index = self.bucketIndex(key=entry.key)
+                index = self.__freeIndex(key=entry.key)
                 self.hashTable[index] = entry
             
 
     def insert(self, key: int, value: str):
         newEntry = Entry(key=key, value=value)
-        index = self.bucketIndex(key=newEntry.key)
+        index = self.__freeIndex(key=newEntry.key)
         self.hashTable[index] = newEntry
         self.__addSize()
 
         if self.__getSize() >= self.__getThreshold(): 
             self.__resize()
-            
+    
+    def __get(self, key:int, x:int) -> Entry:
+        index = self.__keyIndex(key=key, x=x)
+        entry = self.__lookup(index=index)
+        return entry
+
+    def get(self, key: int, value: str) -> Entry:
+        x = 0
+        entry = self.__get(key=key, x=x)
+
+        while entry.value != value:
+            x += 1
+            entry = self.__get(key=key, x=x)
+
 
     def printHashTable(self):
         for i,j in enumerate(self.hashTable):
@@ -83,6 +98,7 @@ ht.insert(key=5, value='peter')
 ht.insert(key=6, value='paul')
 ht.insert(key=1, value='bob')
 
-entry = ht.get(key=2, value='mark')
+entry = ht.get(key=1, value='matt')
 print(entry.value)
 
+ht.printHashTable()
