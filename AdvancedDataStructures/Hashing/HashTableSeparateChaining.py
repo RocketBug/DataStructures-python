@@ -28,7 +28,6 @@ class HashTableSeparateChaining:
         self.capacity = max(capacity, self.DEFAULT_CAPACITY)
         self.maxLoadFactor = max(loadFactor, self.DEFAULT_LOAD_FACTOR)
 
-        
         for i in range(self.capacity):
             self.table.append(None)
 
@@ -121,4 +120,3 @@ ht.print_table()
 ht.remove(key=1)
 
 ht.print_table()
-

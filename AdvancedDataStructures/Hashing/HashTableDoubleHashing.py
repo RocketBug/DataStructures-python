@@ -31,10 +31,12 @@ class HashTableDoubleHashing:
     def __isFree(self, index:int) -> bool:
         return False if self.hashTable[index] != None else True
 
+    def __getIndex(self, key:int, x:int) -> int:
+        return (hash(key) + self.__probing(key=key, x=x)) % self.defaultSize
+
     def __openAddress(self, entry:Entry) -> int:
-        hashkey = entry.hashKey
         for i in range(self.defaultSize):
-            index = (hashkey + self.__probing(key=entry.key, x=i)) % self.defaultSize
+            index = self.__getIndex(key=entry.key, x=i)
             if self.__isFree(index=index):
                 return index
 
@@ -80,6 +82,29 @@ class HashTableDoubleHashing:
         if self.__getSize() >= self.__getThreshold():
             self.__resize()
 
+    def __getEntry(self, index:int) -> Entry:
+        return self.hashTable[index]
+
+    def __get(self, key:int) -> Entry:
+        x = 0
+        index = self.__getIndex(key=key, x=x)
+        while self.__getEntry(index=index).key != key:
+            x += 1
+            index = self.__getIndex(key=key, x=x)
+        
+        return self.__getEntry(index=index)
+
+    def getEntry(self, key:int) -> Entry:
+        return self.__get(key=key)
+
+    def getValue(self, key:int) -> str:
+        return self.__get(key=key).value
+
+    def updateValue(self, key:int, value:str):
+        entry = self.getEntry(key=key)
+        entry.value = value
+    
+
     def printHashTable(self):
         for e,j in enumerate(self.hashTable):
             if j:
@@ -91,10 +116,11 @@ class HashTableDoubleHashing:
 
 ht = HashTableDoubleHashing()
 ht.insert(key=100, value='kevin')
-ht.insert(key=101, value='kevin')
-ht.insert(key=102, value='kevin')
-ht.insert(key=103, value='kevin')
-ht.insert(key=104, value='kevin')
+ht.insert(key=101, value='matt')
+ht.insert(key=102, value='mark')
+ht.insert(key=103, value='luke')
+ht.insert(key=104, value='john')
 
 ht.printHashTable()
 
+print(ht.getValue(key=101))
