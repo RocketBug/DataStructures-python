@@ -1,4 +1,4 @@
-from UnionFind import UnionFind
+from .UnionFind import UnionFind
 
 
 class MinSpanTree:
