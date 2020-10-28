@@ -33,11 +33,19 @@ class FenwickTree:
     def rangeSum(self, i:int, j:int) -> int:
         return self.prefixSum(j) - self.prefixSum(i-1)
 
+    def add(self, i:int, x:int):
+        while i<len(self.tree):
+            self.tree[i] = self.tree[i] + x
+            i = i + self.__lsb(i=i)
+
+
     def printTree(self):
         print(self.tree)
 
+# This Fenwick Tree implementation works with a 1 based array
 values = [0,3,4,-2,7,3,2,2,5,-8,-9,2,4,-8]
 ft = FenwickTree(values=values)
+#ft.add(i=4, x=3)
 ft.printTree()
 print(ft.prefixSum(i=5))
 print(ft.rangeSum(i=1, j=5))
