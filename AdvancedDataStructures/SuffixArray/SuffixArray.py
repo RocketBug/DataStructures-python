@@ -2,8 +2,8 @@
 # A suffix array contains all the sorted suffixes contained in a string
 
 #This function is used for transitioning from python2 to python3, need to find a better solution.
-
-from functools import cmp_to_key
+#from functools import cmp_to_key
+import operator
 
 class SuffixArray:
 
@@ -49,16 +49,12 @@ class SA:
         self.L = [0 for i in range(self.N)]
         self.sa = [0 for i in range(self.N)]
 
-
     class Entry:
         nr = []
         p = 0
         def __init__(self):
             self.nr = [0,0]
             self.p = 0
-
-    def __sortFunc(self, e): 
-        return 
 
     def suffixArray(self):
         for i in range(self.N):
@@ -72,11 +68,19 @@ class SA:
                 l.p = i
                 self.L[i] = l
                 
-            self.L = sorted(
-                self.L, key= cmp_to_key(
-                    lambda y, x: (1 if x.nr[1] < y.nr[1] else -1) if x.nr[0] == y.nr[0] else (1 if x.nr[0] < y.nr[0] else -1)
-                )
-            )
+            #This type of sorting in general is know as multiple level sorting. We first sort according to the first element, then the second element.
+            #In this implementation we use the attrgetter method in operator module. https://docs.python.org/3/howto/sorting.html
+            self.L = sorted(self.L, key=operator.attrgetter('nr'))
+
+            #Sorts it based on the first element in the list, then if they are the same, it'll sort based on the second element.
+            #func = lambda x : (x.nr[0], x.nr[1])
+            #self.L = sorted(self.L, key=func)
+
+            #self.L = sorted(
+            #    self.L, key= cmp_to_key(
+            #        lambda y, x: (1 if x.nr[1] < y.nr[1] else -1) if x.nr[0] == y.nr[0] else (1 if x.nr[0] < y.nr[0] else -1)
+            #    )
+            #)
 
             for i in range(self.N):
                 if i > 0 and self.L[i].nr[0] == self.L[i-1].nr[0] and self.L[i].nr[1] == self.L[i-1].nr[1]:
@@ -90,12 +94,9 @@ class SA:
 
         for value,i  in enumerate(self.P[-1]):
             self.sa[i] = value
-            print(self.sa)
             
     def printSA(self):
-        print(self.P)
         print(self.sa)
-
 
 s = 'banana'
 sa = SA(s)
