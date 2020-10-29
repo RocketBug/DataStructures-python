@@ -4,26 +4,6 @@
 #This function is used for transitioning from python2 to python3, need to find a better solution.
 #from functools import cmp_to_key
 import operator
-
-class SuffixArray:
-
-    suffixArray = []
-    suffixArrayIndex = []
-
-    def __init__(self, s: str):
-        for i in range(len(s)):
-            self.suffixArray.append((i, s[i:]))
-
-        self.suffixArray.sort(key= lambda x : x[1])
-
-        for i in self.suffixArray:
-            self.suffixArrayIndex.append(i[0])
-
-    def printSA(self):
-        print(self.suffixArray)
-        print(self.suffixArrayIndex)
-
-
 class SA:
     S = str
     N = int
@@ -94,14 +74,10 @@ class SA:
 
         for value,i  in enumerate(self.P[-1]):
             self.sa[i] = value
+
+    def getSuffixArray(self):
+        return self.sa
             
     def printSA(self):
+        print(self.P)
         print(self.sa)
-
-s = 'banana'
-sa = SA(s)
-sa.suffixArray()
-sa.printSA()
-
-suffixArray = SuffixArray(s=s)
-suffixArray.printSA()
