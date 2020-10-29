@@ -1,6 +1,10 @@
 # A suffix is a substring at the end of the string with non empty characters
 # A suffix array contains all the sorted suffixes contained in a string
 
+#This function is used for transitioning from python2 to python3, need to find a better solution.
+
+from functools import cmp_to_key
+
 class SuffixArray:
 
     suffixArray = []
@@ -37,13 +41,14 @@ class SA:
         self.N = len(s)
         self.P = [[0 for i in range(self.N)]]
         
-        
         temp = 1 
-        while temp < self.N:
+        while temp>>1 < self.N:
             self.P.append([0 for i in range(self.N)])
             temp = temp << 1
 
         self.L = [0 for i in range(self.N)]
+        self.sa = [0 for i in range(self.N)]
+
 
     class Entry:
         nr = []
@@ -52,27 +57,27 @@ class SA:
             self.nr = [0,0]
             self.p = 0
 
+    def __sortFunc(self, e): 
+        return 
+
     def suffixArray(self):
         for i in range(self.N):
-            self.P[0][i] = ord(self.S[i])-ord('a')
+            self.P[0][i] = ord(self.S[i])-ord('$')
 
-        while self.cnt < self.N:
-
+        while (self.cnt>>1) < self.N:
             for i in range(self.N):
                 l = self.Entry()
-                l.nr[0] = 'apple'
                 l.nr[0] = self.P[self.stp - 1][i]
-
                 l.nr[1] = self.P[self.stp - 1][i + self.cnt] if i + self.cnt < self.N else -1
-
                 l.p = i
-
                 self.L[i] = l
                 
+            self.L = sorted(
+                self.L, key= cmp_to_key(
+                    lambda y, x: (1 if x.nr[1] < y.nr[1] else -1) if x.nr[0] == y.nr[0] else (1 if x.nr[0] < y.nr[0] else -1)
+                )
+            )
 
-            self.L.sort(key= lambda l : l.nr[0])
-            
-            
             for i in range(self.N):
                 if i > 0 and self.L[i].nr[0] == self.L[i-1].nr[0] and self.L[i].nr[1] == self.L[i-1].nr[1]:
                     self.P[self.stp][self.L[i].p] = self.P[self.stp][self.L[i-1].p]
@@ -83,17 +88,19 @@ class SA:
             self.stp += 1
             self.cnt = self.cnt << 1
 
-        for e, i in enumerate(self.P[-1]):
-
-            self.sa.insert(i, e)
+        for value,i  in enumerate(self.P[-1]):
+            self.sa[i] = value
+            print(self.sa)
             
     def printSA(self):
         print(self.P)
         print(self.sa)
 
 
-s = 'camel'
+s = 'banana'
 sa = SA(s)
 sa.suffixArray()
 sa.printSA()
 
+suffixArray = SuffixArray(s=s)
+suffixArray.printSA()
