@@ -1,4 +1,5 @@
-from UnionFind import UnionFind
+from AdvancedDataStructures.UnionFind import UnionFind
+
 
 class MinSpanTree:
     def __init__(self) -> None:
