@@ -1,5 +1,4 @@
 from AdvancedDataStructures.SuffixArray.SuffixArray import SA
-
 class LongestCommonPrefix:
     def __init__(self, s: str) -> None:
         self.S = s

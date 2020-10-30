@@ -1,4 +1,6 @@
 from collections import deque
+
+
 class Entry:
     hash_key = int
     key = int
@@ -16,6 +18,7 @@ class Entry:
         else:
             return True
 
+
 class HashTableSeparateChaining:
     DEFAULT_CAPACITY = 3
     DEFAULT_LOAD_FACTOR = 0.75
@@ -24,33 +27,32 @@ class HashTableSeparateChaining:
     capacity, threshold, size = 0, 0, 0
     table = []
 
-    def __init__(self, capacity: int, loadFactor: int):
+    def __init__(self, capacity: int, load_factor: float):
         self.capacity = max(capacity, self.DEFAULT_CAPACITY)
-        self.maxLoadFactor = max(loadFactor, self.DEFAULT_LOAD_FACTOR)
+        self.maxLoadFactor = max(load_factor, self.DEFAULT_LOAD_FACTOR)
 
         for i in range(self.capacity):
             self.table.append(None)
 
-    
     def get_size(self) -> int:
         return self.size
 
-    def isEmpty(self) -> bool:
+    def is_empty(self) -> bool:
         return self.size == 0
 
-    def normalizeIndex(self, keyHash: int) -> int:
-        return (keyHash & 0x7FFFFFFF) % self.capacity
+    def normalize_index(self, keyhash: int) -> int:
+        return (keyhash & 0x7FFFFFFF) % self.capacity
 
     def clear(self):
         self.table = []
         self.size = 0
 
-    def __bucketSeekEntry(self, bucketIndex: int, key: int):
-        if key == None:
+    def __bucket_seek_entry(self, bucket_index: int, key: int):
+        if key is None:
             return None
 
-        bucket = self.table[bucketIndex]
-        if bucket == None:
+        bucket = self.table[bucket_index]
+        if bucket is None:
             return None
 
         for entry in bucket:
@@ -59,16 +61,16 @@ class HashTableSeparateChaining:
 
         return None
 
-    def __bucketInsertEntry(self, bucketIndex:int, entry: Entry):
-        bucket = self.table[bucketIndex]
-        if bucket == None:
+    def __bucket_insert_entry(self, bucket_index: int, entry: Entry):
+        bucket = self.table[bucket_index]
+        if bucket is None:
             bucket = deque()
             bucket.append(entry)
-            self.table[bucketIndex] = bucket
+            self.table[bucket_index] = bucket
 
         else:
-            existentEntry = self.__bucketSeekEntry(bucketIndex=bucketIndex, key=entry.key)
-            if existentEntry == None:
+            existent_entry = self.__bucket_seek_entry(bucket_index=bucket_index, key=entry.key)
+            if existent_entry is None:
                 bucket.append(entry)
 
             else:
@@ -76,37 +78,37 @@ class HashTableSeparateChaining:
 
         self.size = self.size + 1
 
-    def __bucketRemoveEntry(self, bucketIndex: int, key: int):
-        bucket = self.table[bucketIndex]
+    def __bucket_remove_entry(self, bucket_index: int, key: int):
+        bucket = self.table[bucket_index]
         for entry in bucket:
             if entry.key == key:
                 bucket.remove(entry)
                 self.size -= 1
-                return 
+                return
 
     def insert(self, key: int, value: str):
-        newEntry = Entry(key=key, value=value)
-        bucketIndex = self.normalizeIndex(keyHash=hash(key))
-        self.__bucketInsertEntry(bucketIndex=bucketIndex, entry=newEntry)
+        new_entry = Entry(key=key, value=value)
+        bucket_index = self.normalize_index(keyhash=hash(key))
+        self.__bucket_insert_entry(bucket_index=bucket_index, entry=new_entry)
 
     def get(self, key: int):
-        bucketIndex = self.normalizeIndex(keyHash=hash(key))
-        return self.__bucketSeekEntry(bucketIndex= bucketIndex, key= key)
+        bucket_index = self.normalize_index(keyhash=hash(key))
+        return self.__bucket_seek_entry(bucket_index=bucket_index, key=key)
 
     def remove(self, key: int):
-        bucketIndex = self.normalizeIndex(keyHash=hash(key))
-        self.__bucketRemoveEntry(bucketIndex=bucketIndex, key=key)
-
+        bucket_index = self.normalize_index(keyhash=hash(key))
+        self.__bucket_remove_entry(bucket_index=bucket_index, key=key)
 
     def print_table(self):
         for i in range(self.capacity):
             bucket = self.table[i]
             for entry in bucket:
                 print(entry.value)
-            
+
             print()
 
-ht = HashTableSeparateChaining(capacity=5, loadFactor=0.75)
+
+ht = HashTableSeparateChaining(capacity=5, load_factor=0.75)
 
 ht.insert(key=1, value='kevin')
 ht.insert(key=2, value='matthew')

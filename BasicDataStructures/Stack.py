@@ -11,7 +11,7 @@ class Stack:
     def pops(self):
         self.stackS.pop()
 
-    def isEmpty(self):
+    def is_empty(self):
         return self.stackS == []
 
 def parseChecker(parsingVal):
@@ -25,7 +25,7 @@ def parseChecker(parsingVal):
             s.push(symbol)
 
         else:
-            if s.isEmpty():
+            if s.is_empty():
                 balanced = False
 
             else:
@@ -34,7 +34,7 @@ def parseChecker(parsingVal):
         index += 1
         s.printStack()
 
-    if balanced and s.isEmpty():
+    if balanced and s.is_empty():
         return True
     else:
         return False

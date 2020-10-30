@@ -1,5 +1,5 @@
 class BinarySearchTree:
-    nodeCount = 0
+    __nodeCount = 0
     root = None
 
     class _Node:
@@ -7,15 +7,15 @@ class BinarySearchTree:
             self.data = elem
             self.left = left
             self.right = right
-            
-    def size(self) -> int:
-        return self.nodeCount
 
-    def isEmpty(self) -> bool:
+    def size(self) -> int:
+        return self.__nodeCount
+
+    def is_empty(self) -> bool:
         return self.size() == 0
 
     def __contains(self, node, elem) -> bool:
-        if node == None:
+        if node is None:
             return False
 
         if elem < node.data:
@@ -26,12 +26,12 @@ class BinarySearchTree:
 
         else:
             return True
-    
+
     def contains(self, elem: int) -> bool:
         return self.__contains(node=self.root, elem=elem)
 
     def __add(self, node: _Node, elem: int) -> _Node:
-        if node == None:
+        if node is None:
             node = self._Node(elem=elem, left=None, right=None)
 
         else:
@@ -49,18 +49,19 @@ class BinarySearchTree:
 
         else:
             self.root = self.__add(node=self.root, elem=elem)
-            self.nodeCount += 1
+            self.__nodeCount += 1
             return True
 
-    def digLeft(self, node: _Node) -> _Node:
+    @staticmethod
+    def __dig_left(node: _Node) -> _Node:
         curr = node
-        while curr.left != None:
+        while curr.left is not None:
             curr = curr.left
 
         return curr
 
     def __remove(self, node: _Node, elem: int) -> _Node:
-        if node == None:
+        if node is None:
             return None
 
         if elem < node.data:
@@ -70,36 +71,37 @@ class BinarySearchTree:
             node.right = self.__remove(node=node.right, elem=elem)
 
         else:
-            if node.left == None:
-                rightChild = node.right
+            if node.left is None:
+                right_child = node.right
                 node.data = None
                 node = None
 
-                return rightChild
+                return right_child
 
-            elif node.right == None :
-                leftChild = node.left
-                node.data = None 
+            elif node.right is None:
+                left_child = node.left
+                node.data = None
                 node = None
 
-                return leftChild
+                return left_child
 
             else:
-                tmp = self.digLeft(node=node.right)
+                tmp = self.__dig_left(node=node.right)
                 node.data = tmp.data
                 node.right = self.__remove(node=node.right, elem=tmp.data)
 
         return node
 
-    def remove(self, elem: int) -> bool:
+    def remove(self, elem: int):
         if self.contains(elem):
             self.root = self.__remove(node=self.root, elem=elem)
 
-    def preOrderTraversal(self, node: _Node):
-        if node != None:
-            self.preOrderTraversal(node=node.left)
+    def preorder_traversal(self, node: _Node):
+        if node is not None:
+            self.preorder_traversal(node=node.left)
             print(node.data)
-            self.preOrderTraversal(node=node.right)
+            self.preorder_traversal(node=node.right)
+
 
 bst = BinarySearchTree()
 bst.add(elem=8)
@@ -110,6 +112,6 @@ bst.add(elem=6)
 bst.add(elem=14)
 bst.add(elem=4)
 bst.add(elem=7)
-bst.preOrderTraversal(node=bst.root)
+bst.preorder_traversal(node=bst.root)
 bst.remove(elem=6)
-bst.preOrderTraversal(node=bst.root)
+bst.preorder_traversal(node=bst.root)

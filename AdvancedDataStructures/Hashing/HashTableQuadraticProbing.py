@@ -16,102 +16,100 @@ class HashTableQuadraticProbing:
     def __init__(self):
         self.hashTable = [None for i in range(self.defaultSize)]
 
-    def __getSize(self) -> int:
+    def __get_size(self) -> int:
         return self.size
 
-    def __addSize(self):
+    def __add_size(self):
         self.size += 1
 
-    def __getThreshold(self) -> int:
-        return round(self.DEFAULT_LOADFACTOR * self.defaultSize) 
+    def __get_threshold(self) -> int:
+        return round(self.DEFAULT_LOADFACTOR * self.defaultSize)
 
-    def __probing(self, x:int) -> int:
-        return ((x**2)+x) // 2
+    @staticmethod
+    def __probing(x: int) -> int:
+        return ((x ** 2) + x) // 2
 
-    def __isFree(self, index:int) -> bool:
-        return False if self.hashTable[index] != None else True
+    def __is_free(self, index: int) -> bool:
+        return False if self.hashTable[index] is not None else True
 
-    def __openAddress(self, entry:Entry) -> int:
+    def __open_address(self, entry: Entry) -> int:
         hashkey = entry.hashKey
         for i in range(self.defaultSize):
             index = (hashkey + self.__probing(x=i)) % self.defaultSize
-            if self.__isFree(index=index):
+            if self.__is_free(index=index):
                 return index
 
-    def __addPower(self):
+    def __add_power(self):
         self.power += 1
-    
-    def __getPower(self) -> int:
+
+    def __get_power(self) -> int:
         return self.power
 
-    def __increaseDefaultSize(self):
-        self.defaultSize = 2**self.__getPower()
+    def __increase_deafult_size(self):
+        self.defaultSize = 2 ** self.__get_power()
 
     def __resize(self):
-        self.__addPower()
-        self.__increaseDefaultSize()
+        self.__add_power()
+        self.__increase_deafult_size()
 
-        tempHashTable = self.hashTable.copy()
-        self.hashTable = [None for i in range(2**self.__getPower())]
+        temp_hashtable = self.hashTable.copy()
+        self.hashTable = [None for _ in range(2 ** self.__get_power())]
 
-        for e in tempHashTable:
+        for e in temp_hashtable:
             if e:
-                openAddress = self.__openAddress(entry=e)
-                self.hashTable[openAddress] = e
+                open_address = self.__open_address(entry=e)
+                self.hashTable[open_address] = e
 
-        tempHashTable.clear()
+        temp_hashtable.clear()
 
+    def insert(self, key: int, value: str):
+        new_entry = Entry(key=key, value=value)
+        open_address = self.__open_address(entry=new_entry)
+        self.hashTable[open_address] = new_entry
+        self.__add_size()
 
-    def insert(self, key:int, value:str):
-        newEntry = Entry(key=key, value=value)
-        openAddress = self.__openAddress(entry=newEntry)
-        self.hashTable[openAddress] = newEntry
-        self.__addSize()
-
-        if self.__getSize() >= self.__getThreshold():
+        if self.__get_size() >= self.__get_threshold():
             self.__resize()
 
-    def __getEntry(self, index:int) -> Entry:
+    def __get_entry(self, index: int) -> Entry:
         return self.hashTable[index]
 
-    def __get(self, key:int) -> Entry:
-        keyHash = hash(key)
-        
-        x = 0
-        index = (keyHash + self.__probing(x=x)) % self.defaultSize
-        
-        while self.__getEntry(index=index).key != key:
-            x += 1
-            index = (keyHash + self.__probing(x=x)) % self.defaultSize
-        
-        return self.__getEntry(index=index)
+    def __get(self, key: int) -> Entry:
+        keyhash = hash(key)
 
-    def getEntry(self, key:int) -> Entry:
+        x = 0
+        index = (keyhash + self.__probing(x=x)) % self.defaultSize
+
+        while self.__get_entry(index=index).key != key:
+            x += 1
+            index = (keyhash + self.__probing(x=x)) % self.defaultSize
+
+        return self.__get_entry(index=index)
+
+    def get_entry(self, key: int) -> Entry:
         return self.__get(key=key)
 
-    def getValue(self, key:int) -> str:
+    def get_value(self, key: int) -> str:
         return self.__get(key=key).value
 
-    def updateValue(self, key:int, value:str):
-        entry = self.getEntry(key=key)
+    def update_value(self, key: int, value: str):
+        entry = self.get_entry(key=key)
         entry.value = value
 
-    def printHashTable(self):
-        for e,j in enumerate(self.hashTable):
+    def print_hashtable(self):
+        for e, j in enumerate(self.hashTable):
             if j:
                 print(e, j.value)
 
             else:
                 print(e, j)
 
+
 ht = HashTableQuadraticProbing()
 
 ht.insert(key=0, value='kevin')
 ht.insert(key=1, value='matt')
 ht.insert(key=2, value='mark')
-ht.updateValue(key=2, value='john')
+ht.update_value(key=2, value='john')
 ht.insert(key=3, value='james')
-ht.printHashTable()
-
-
-
+ht.print_hashtable()
