@@ -1,4 +1,6 @@
 from AdvancedDataStructures.SuffixArray.SuffixArray import SA
+
+
 class LongestCommonPrefix:
     def __init__(self, s: str) -> None:
         self.S = s
@@ -8,7 +10,7 @@ class LongestCommonPrefix:
         self.P = self.suffixArray.P
         self.sa = self.suffixArray.sa
 
-    def lcp(self):
+    def lcp(self) -> list:
         lcp = [0 for i in range(self.N)]
         invSuffixArray = self.P[-1]
 
@@ -31,9 +33,9 @@ class LongestCommonPrefix:
 
         lcp.insert(0, 0)
         lcp.pop(-1)
-        print(lcp)
+        return lcp
 
 
-s = 'banana'
-lcp = LongestCommonPrefix(s=s)
-lcp.lcp()
+#s = 'banana'
+#lcp = LongestCommonPrefix(s=s)
+#lcp.lcp()
